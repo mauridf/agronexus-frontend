@@ -1,0 +1,43 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/inventory/inputs"><mat-icon>arrow_back</mat-icon></button>
+    <div><h1 class="page-title"><mat-icon>add_circle</mat-icon> Novo Insumo</h1><p class="page-subtitle">Cadastre um novo insumo no catálogo</p></div>
+  </div>
+  @if (errorMessage) { <div class="error-alert"><mat-icon>error_outline</mat-icon><span>{{ errorMessage }}</span></div> }
+  <form [formGroup]="inputForm" (ngSubmit)="onSubmit()" class="form-card card">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome do Insumo</mat-label>
+      <input matInput formControlName="name" placeholder="Ex: Fertilizante NPK" maxlength="150"/>
+      <mat-icon matPrefix>inventory_2</mat-icon>
+      <mat-hint align="end">{{ nameControl?.value?.length || 0 }}/150</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="tipo">
+        <mat-option value="">Não informado</mat-option>
+        @for (t of tipos; track t) { <mat-option [value]="t">{{ t }}</mat-option> }
+      </mat-select>
+      <mat-icon matPrefix>category</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Unidade de Medida</mat-label>
+      <mat-select formControlName="unidadeMedida">
+        <mat-option value="">Não informado</mat-option>
+        @for (u of unidades; track u) { <mat-option [value]="u">{{ u }}</mat-option> }
+      </mat-select>
+      <mat-icon matPrefix>straighten</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fornecedor</mat-label>
+      <input matInput formControlName="fornecedor" placeholder="Nome do fornecedor"/>
+      <mat-icon matPrefix>local_shipping</mat-icon>
+    </mat-form-field>
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/inventory/inputs">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || inputForm.invalid">
+        @if (!isSaving) { <mat-icon>save</mat-icon> <span>Cadastrar</span> }
+        @if (isSaving) { <mat-spinner diameter="20"></mat-spinner> <span>Salvando...</span> }
+      </button>
+    </div>
+  </form>
+</div>

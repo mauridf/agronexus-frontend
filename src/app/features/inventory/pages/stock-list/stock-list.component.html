@@ -1,0 +1,43 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <button mat-icon-button routerLink="/inventory"><mat-icon>arrow_back</mat-icon></button>
+      <h1 class="page-title"><mat-icon>warehouse</mat-icon> Estoque</h1>
+      <p class="page-subtitle">Visualize o estoque de insumos por fazenda</p>
+    </div>
+  </div>
+  <mat-form-field appearance="outline" class="farm-selector">
+    <mat-label>Selecione a Fazenda</mat-label>
+    <mat-select [(value)]="selectedFarmId" (selectionChange)="onFarmChange()">
+      @for (farm of farms; track farm.id) { <mat-option [value]="farm.id">{{ farm.name }}</mat-option> }
+    </mat-select>
+    <mat-icon matPrefix>home</mat-icon>
+  </mat-form-field>
+
+  @if (isLoading) { <div class="loading"><mat-spinner diameter="40"></mat-spinner><p>Carregando estoque...</p></div> }
+
+  @if (!isLoading && stock.length > 0) {
+    <div class="stock-grid">
+      @for (item of stock; track item.id) {
+        <mat-card class="stock-card" [class.expired]="item.vencido">
+          <mat-card-header>
+            <mat-card-title>{{ item.inputName }}</mat-card-title>
+            <mat-card-subtitle>Quantidade: {{ item.quantidade | number:'1.2-2' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            @if (item.validade) { <p><strong>Validade:</strong> {{ item.validade | date:'dd/MM/yyyy' }}</p> }
+            @if (item.vencido) { <span class="expired-badge">VENCIDO</span> }
+            @if (!item.vencido && item.quantidade > 0) { <span class="ok-badge">DISPONÍVEL</span> }
+            @if (item.quantidade === 0) { <span class="zero-badge">ESGOTADO</span> }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+
+  @if (!isLoading && stock.length === 0 && selectedFarmId) {
+    <div class="empty card"><mat-icon>warehouse</mat-icon><p>Nenhum insumo em estoque</p>
+      <button mat-raised-button color="primary" routerLink="/inventory/purchase">Registrar Compra</button>
+    </div>
+  }
+</div>

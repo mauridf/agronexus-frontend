@@ -1,0 +1,40 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/inventory"><mat-icon>arrow_back</mat-icon></button>
+    <div><h1 class="page-title"><mat-icon>shopping_cart</mat-icon> Registrar Compra</h1><p class="page-subtitle">Registre a compra de insumos para uma fazenda</p></div>
+  </div>
+  @if (errorMessage) { <div class="error-alert"><mat-icon>error_outline</mat-icon><span>{{ errorMessage }}</span></div> }
+  <form [formGroup]="purchaseForm" (ngSubmit)="onSubmit()" class="form-card card">
+    <h2 class="section-title"><mat-icon>link</mat-icon> Vinculação</h2>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Fazenda</mat-label>
+        <mat-select formControlName="farmId">
+          @for (farm of farms; track farm.id) { <mat-option [value]="farm.id">{{ farm.name }}</mat-option> }
+        </mat-select>
+        <mat-icon matPrefix>home</mat-icon>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Insumo</mat-label>
+        <mat-select formControlName="inputId">
+          @for (input of inputs; track input.id) { <mat-option [value]="input.id">{{ input.name }}</mat-option> }
+        </mat-select>
+        <mat-icon matPrefix>inventory_2</mat-icon>
+      </mat-form-field>
+    </div>
+    <h2 class="section-title"><mat-icon>description</mat-icon> Dados da Compra</h2>
+    <div class="form-grid">
+      <mat-form-field appearance="outline"><mat-label>Quantidade</mat-label><input title="Quantidade" matInput type="number" formControlName="quantidade" min="0" step="0.01"/><mat-icon matPrefix>scale</mat-icon></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Valor Total (R$)</mat-label><input title="Valor Total" matInput type="number" formControlName="valorTotal" min="0" step="0.01"/><span matPrefix>R$</span></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Data da Compra</mat-label><input title="Data da Compra" matInput type="date" formControlName="dataCompra"/><mat-icon matPrefix>today</mat-icon></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Fornecedor</mat-label><input title="Fornecedor" matInput formControlName="fornecedor"/><mat-icon matPrefix>local_shipping</mat-icon></mat-form-field>
+    </div>
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/inventory">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || purchaseForm.invalid">
+        @if (!isSaving) { <mat-icon>save</mat-icon> <span>Registrar Compra</span> }
+        @if (isSaving) { <mat-spinner diameter="20"></mat-spinner> <span>Salvando...</span> }
+      </button>
+    </div>
+  </form>
+</div>

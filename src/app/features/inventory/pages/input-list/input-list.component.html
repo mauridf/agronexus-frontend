@@ -1,0 +1,36 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <button mat-icon-button routerLink="/inventory" matTooltip="Voltar"><mat-icon>arrow_back</mat-icon></button>
+      <h1 class="page-title"><mat-icon>category</mat-icon> Catálogo de Insumos</h1>
+      <p class="page-subtitle">Tipos de insumo disponíveis</p>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/inventory/inputs/new"><mat-icon>add</mat-icon> Novo Insumo</button>
+  </div>
+
+  @if (isLoading) { <div class="loading"><mat-spinner diameter="40"></mat-spinner><p>Carregando...</p></div> }
+
+  @if (!isLoading && inputs.length > 0) {
+    <div class="inputs-grid">
+      @for (input of inputs; track input.id) {
+        <mat-card class="input-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar [style.color]="'#2E7D32'">{{ getTipoIcon(input.tipo) }}</mat-icon>
+            <mat-card-title>{{ input.name }}</mat-card-title>
+            <mat-card-subtitle>{{ input.tipo || 'Tipo não informado' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            @if (input.unidadeMedida) { <p><strong>Unidade:</strong> {{ input.unidadeMedida }}</p> }
+            @if (input.fornecedor) { <p><strong>Fornecedor:</strong> {{ input.fornecedor }}</p> }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+
+  @if (!isLoading && inputs.length === 0) {
+    <div class="empty card"><mat-icon>inventory_2</mat-icon><p>Nenhum insumo cadastrado</p>
+      <button mat-raised-button color="primary" routerLink="/inventory/inputs/new">Cadastrar Insumo</button>
+    </div>
+  }
+</div>

@@ -1,14 +1,3 @@
-## 🚀 **ETAPA 15: README, BUILD E DEPLOY NO RENDER**
-
-Esta é a etapa final! Vamos documentar o projeto, preparar para produção e fazer o deploy.
-
----
-
-### **15.1 Criar README.md**
-
-**📂 `README.md`** (Raiz do projeto)
-
-```markdown
 # 🌾 AgroNexus - Frontend
 
 Sistema de Gestão Agrícola - Frontend desenvolvido em Angular 20.

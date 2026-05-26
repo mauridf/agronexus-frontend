@@ -1,0 +1,101 @@
+<div class="auth-container">
+  <div class="auth-card">
+    
+    <!-- Cabeçalho -->
+    <div class="auth-header">
+      <mat-icon class="auth-logo">agriculture</mat-icon>
+      <h1 class="auth-title">Criar Conta</h1>
+      <p class="auth-subtitle">Cadastre-se no AgroNexus</p>
+    </div>
+
+    <!-- Mensagem de erro -->
+    @if (errorMessage) {
+      <div class="error-alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <!-- Formulário de Registro -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      
+      <!-- Tipo de Usuário -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tipo de Usuário</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="PRD">Produtor Rural</mat-option>
+          <mat-option value="ADM">Administrador</mat-option>
+        </mat-select>
+        <mat-icon matPrefix>person</mat-icon>
+        @if (roleControl?.invalid && roleControl?.touched) {
+          <mat-error>Selecione o tipo de usuário</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="seu@email.com" autocomplete="email"/>
+        <mat-icon matPrefix>email</mat-icon>
+        @if (emailControl?.invalid && emailControl?.touched) {
+          <mat-error>{{ getEmailErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Senha -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Senha</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Mínimo 8 caracteres"/>
+        <mat-icon matPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword" tabindex="-1">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (passwordControl?.invalid && passwordControl?.touched) {
+          <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Confirmar Senha -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmar Senha</mat-label>
+        <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="Repita a senha"/>
+        <mat-icon matPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword" tabindex="-1">
+          <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (confirmPasswordControl?.invalid && confirmPasswordControl?.touched) {
+          <mat-error>{{ getConfirmPasswordErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Requisitos da Senha -->
+      <div class="password-requirements">
+        <p class="requirements-title">A senha deve conter:</p>
+        <ul>
+          <li [class.met]="passwordControl?.value?.length >= 8">Mínimo 8 caracteres</li>
+          <li [class.met]="passwordControl?.value && /[A-Z]/.test(passwordControl.value)">1 letra maiúscula</li>
+          <li [class.met]="passwordControl?.value && /[a-z]/.test(passwordControl.value)">1 letra minúscula</li>
+          <li [class.met]="passwordControl?.value && /[0-9]/.test(passwordControl.value)">1 número</li>
+          <li [class.met]="passwordControl?.value && /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(passwordControl.value)">1 caractere especial</li>
+        </ul>
+      </div>
+
+      <!-- Botão Criar Conta -->
+      <button mat-raised-button color="primary" type="submit" class="full-width submit-button" [disabled]="isLoading">
+        @if (!isLoading) {
+          <span>Criar Conta</span>
+        }
+        @if (isLoading) {
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Criando...</span>
+        }
+      </button>
+
+      <!-- Link para Login -->
+      <div class="auth-footer">
+        <span>Já tem uma conta?</span>
+        <a routerLink="/auth/login" class="auth-link">Fazer login</a>
+      </div>
+    </form>
+  </div>
+</div>

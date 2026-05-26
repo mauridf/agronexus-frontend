@@ -1,0 +1,169 @@
+// ============================================
+// MESMO ESTILO DO LOGIN + PASSWORD REQUIREMENTS
+// ============================================
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1B5E20 0%, #4CAF50 50%, #81C784 100%);
+  padding: 1rem;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-logo {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: #2E7D32;
+  margin-bottom: 0.5rem;
+}
+
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1B5E20;
+  margin: 0;
+}
+
+.auth-subtitle {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FFEBEE;
+  color: #D32F2F;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  border-left: 4px solid #D32F2F;
+
+  mat-icon {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+// ============================================
+// REQUISITOS DA SENHA
+// ============================================
+
+.password-requirements {
+  background: #F5F5F5;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.requirements-title {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    font-size: 0.8rem;
+    color: #999;
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '✗';
+      color: #D32F2F;
+      font-weight: bold;
+    }
+
+    &.met {
+      color: #388E3C;
+
+      &::before {
+        content: '✓';
+        color: #388E3C;
+      }
+    }
+  }
+}
+
+.submit-button {
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+
+  span {
+    margin-right: 0.25rem;
+  }
+}
+
+.auth-link {
+  color: #2E7D32;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+}

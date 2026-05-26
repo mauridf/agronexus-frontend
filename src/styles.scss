@@ -1,130 +1,41 @@
 // ============================================
-// 1. IMPORTS DO ANGULAR MATERIAL (PRECISAM SER OS PRIMEIROS!)
+// 1. IMPORTS DO ANGULAR MATERIAL (USAR @use)
 // ============================================
 @use '@angular/material' as mat;
 
 // ============================================
-// 2. DEFINIÇÃO DE PALETAS DE CORES
+// 2. OUTROS IMPORTS (USAR @use em vez de @import)
 // ============================================
-
-// Paleta Verde (Primário)
-$primary-palette: (
-  50: #E8F5E9,
-  100: #C8E6C9,
-  200: #A5D6A7,
-  300: #81C784,
-  400: #66BB6A,
-  500: #4CAF50,
-  600: #43A047,
-  700: #388E3C,
-  800: #2E7D32,
-  900: #1B5E20,
-  contrast: (
-    50: #000000,
-    100: #000000,
-    200: #000000,
-    300: #000000,
-    400: #000000,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-  )
-);
-
-// Paleta Terra (Secundário)
-$accent-palette: (
-  50: #FBE9E7,
-  100: #FFCCBC,
-  200: #FFAB91,
-  300: #FF8A65,
-  400: #FF7043,
-  500: #8D6E63,
-  600: #6D4C41,
-  700: #5D4037,
-  800: #4E342E,
-  900: #3E2723,
-  contrast: (
-    50: #000000,
-    100: #000000,
-    200: #000000,
-    300: #000000,
-    400: #000000,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-  )
-);
-
-// Paleta Alerta (Warn)
-$warn-palette: (
-  50: #FFEBEE,
-  100: #FFCDD2,
-  200: #EF9A9A,
-  300: #E57373,
-  400: #EF5350,
-  500: #F44336,
-  600: #E53935,
-  700: #D32F2F,
-  800: #C62828,
-  900: #B71C1C,
-  contrast: (
-    50: #000000,
-    100: #000000,
-    200: #000000,
-    300: #000000,
-    400: #000000,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-  )
-);
+@use 'ngx-toastr/toastr' as toastr;
+@use '@fortawesome/fontawesome-free/css/all.css' as fa;
 
 // ============================================
 // 3. CONFIGURAÇÃO DO TEMA
 // ============================================
 
-// Definir paletas
-$agronexus-primary: mat.define-palette($primary-palette, 700);
-$agronexus-accent: mat.define-palette($accent-palette, 500);
-$agronexus-warn: mat.define-palette($warn-palette, 700);
+// Definir cores primárias (Verde)
+$primary: mat.define-palette(mat.$green-palette, 800, 700, 900);
+$accent: mat.define-palette(mat.$brown-palette, 500, 400, 600);
+$warn: mat.define-palette(mat.$red-palette, 700);
 
 // Criar tema
-$agronexus-theme: mat.define-light-theme((
+$theme: mat.define-light-theme((
   color: (
-    primary: $agronexus-primary,
-    accent: $agronexus-accent,
-    warn: $agronexus-warn,
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
   ),
   typography: mat.define-typography-config(
     $font-family: 'Roboto, "Helvetica Neue", sans-serif',
-    $headline-1: mat.define-typography-level(32px, 40px, 700),
-    $headline-2: mat.define-typography-level(24px, 32px, 600),
-    $headline-3: mat.define-typography-level(20px, 28px, 600),
-    $headline-4: mat.define-typography-level(18px, 24px, 500),
-    $body-1: mat.define-typography-level(16px, 24px, 400),
-    $body-2: mat.define-typography-level(14px, 20px, 400),
-    $button: mat.define-typography-level(14px, 14px, 500),
   ),
   density: 0
 ));
 
-// Aplicar tema a todos componentes
-@include mat.all-component-themes($agronexus-theme);
+// Aplicar tema
+@include mat.all-component-themes($theme);
 
 // ============================================
-// 4. OUTROS IMPORTS CSS
-// ============================================
-@import '@fortawesome/fontawesome-free/css/all.css';
-@import 'ngx-toastr/toastr';
-
-// ============================================
-// 5. ESTILOS GLOBAIS
+// 4. ESTILOS GLOBAIS
 // ============================================
 
 * {
@@ -136,15 +47,15 @@ $agronexus-theme: mat.define-light-theme((
 html, body {
   height: 100%;
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   color: #333333;
 }
 
 // ============================================
-// 6. CLASSES UTILITÁRIAS
+// 5. CLASSES UTILITÁRIAS
 // ============================================
 
-// Cores
+// Cores do AgroNexus
 .text-primary { color: #2E7D32 !important; }
 .text-secondary { color: #8D6E63 !important; }
 .text-success { color: #388E3C !important; }
@@ -153,8 +64,8 @@ html, body {
 .text-info { color: #1976D2 !important; }
 
 .bg-primary { background-color: #2E7D32 !important; }
-.bg-light { background-color: #F5F5F5 !important; }
-.bg-white { background-color: #FFFFFF !important; }
+.bg-light { background-color: #f5f5f5 !important; }
+.bg-white { background-color: #ffffff !important; }
 
 // Espaçamento
 .m-0 { margin: 0 !important; }
@@ -195,9 +106,9 @@ html, body {
 
 // Cards
 .card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -218,4 +129,21 @@ html, body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+// Toastr customizado
+.toast-success {
+  background-color: #388E3C !important;
+}
+
+.toast-error {
+  background-color: #D32F2F !important;
+}
+
+.toast-warning {
+  background-color: #F57C00 !important;
+}
+
+.toast-info {
+  background-color: #1976D2 !important;
 }

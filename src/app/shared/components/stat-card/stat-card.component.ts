@@ -11,7 +11,8 @@ import { MaterialModule } from '../../material/material.module';
       <div class="stat-content">
         <div class="stat-info">
           <span class="stat-label">{{ label }}</span>
-          <span class="stat-value">{{ value | number:'1.2-2':'pt-BR' }}{{ suffix }}</span>
+          <!-- Usar número formatado sem especificar locale (usa o global pt-BR) -->
+          <span class="stat-value">{{ formattedValue }}{{ suffix }}</span>
           @if (subtitle) {
             <span class="stat-subtitle">{{ subtitle }}</span>
           }
@@ -27,6 +28,7 @@ import { MaterialModule } from '../../material/material.module';
       border-radius: 12px;
       transition: transform 0.2s, box-shadow 0.2s;
       cursor: default;
+      height: 100%;
     }
 
     .stat-card:hover {
@@ -38,12 +40,13 @@ import { MaterialModule } from '../../material/material.module';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.5rem;
+      padding: 0.25rem;
     }
 
     .stat-info {
       display: flex;
       flex-direction: column;
+      flex: 1;
     }
 
     .stat-label {
@@ -71,6 +74,7 @@ import { MaterialModule } from '../../material/material.module';
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-left: 0.5rem;
     }
 
     .stat-icon mat-icon {
@@ -80,7 +84,7 @@ import { MaterialModule } from '../../material/material.module';
       color: #2E7D32;
     }
 
-    /* Cores alternativas */
+    /* Cores */
     .color-green .stat-icon { background: rgba(46, 125, 50, 0.1); }
     .color-green .stat-icon mat-icon { color: #2E7D32; }
     .color-green .stat-value { color: #2E7D32; }
@@ -110,4 +114,24 @@ export class StatCardComponent {
   @Input() subtitle: string = '';
   @Input() icon: string = 'info';
   @Input() colorClass: string = 'color-green';
+
+  /**
+   * Formata o valor sem usar DecimalPipe (evita erro de locale)
+   */
+  get formattedValue(): string {
+    if (this.value === null || this.value === undefined) {
+      return '0';
+    }
+    
+    // Se for número inteiro, não mostra decimais
+    if (Number.isInteger(this.value)) {
+      return this.value.toLocaleString('pt-BR');
+    }
+    
+    // Se tiver decimais, mostra 2 casas
+    return this.value.toLocaleString('pt-BR', { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    });
+  }
 }

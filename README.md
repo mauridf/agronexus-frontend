@@ -1,59 +1,216 @@
-# AgronexusFrontend
+## 🚀 **ETAPA 15: README, BUILD E DEPLOY NO RENDER**
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+Esta é a etapa final! Vamos documentar o projeto, preparar para produção e fazer o deploy.
 
-## Development server
+---
 
-To start a local development server, run:
+### **15.1 Criar README.md**
+
+**📂 `README.md`** (Raiz do projeto)
+
+```markdown
+# 🌾 AgroNexus - Frontend
+
+Sistema de Gestão Agrícola - Frontend desenvolvido em Angular 20.
+
+## 📋 Sobre o Projeto
+
+O AgroNexus é um sistema completo para gestão de produtores rurais, permitindo o gerenciamento de fazendas, culturas, insumos, contratos, funcionários, monitoramento e finanças.
+
+### Funcionalidades
+
+- 🔐 **Autenticação**: Login e registro com JWT (Admin e Produtor)
+- 📊 **Dashboard**: Indicadores estratégicos (admin e produtor)
+- 👥 **Produtores**: CRUD completo com vinculação de usuários
+- 🏠 **Fazendas**: Gestão de propriedades com validação de áreas
+- 🌱 **Agricultura**: Catálogo de culturas e plantio vinculado
+- 📦 **Inventário**: Insumos, compras e controle de estoque
+- ⚙️ **Operações**: Contratos, custos, máquinas e funcionários
+- 📡 **Monitoramento**: Alertas, certificados e registros climáticos
+- 💰 **Financeiro**: Vendas de produção colhida
+
+### Tecnologias
+
+| Tecnologia | Versão |
+|------------|--------|
+| Angular | 20.x |
+| TypeScript | 5.5+ |
+| Angular Material | 20.x |
+| RxJS | 7.x |
+| Chart.js | 4.x |
+| date-fns | 3.x |
+| ngx-mask | 20.x |
+| ngx-toastr | 19.x |
+
+---
+
+## 🚀 Instalação e Execução Local
+
+### Pré-requisitos
+
+- **Node.js** 20.x ou superior
+- **npm** 10.x ou superior
+- **Angular CLI** 20.x (`npm install -g @angular/cli@20`)
+
+### Passos
 
 ```bash
-ng serve
+# 1. Clonar o repositório
+git clone https://github.com/seu-usuario/agronexus-frontend.git
+cd agronexus-frontend
+
+# 2. Instalar dependências
+npm install
+
+# 3. Executar em desenvolvimento
+ng serve --open
+
+# 4. Acessar no navegador
+# http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Variáveis de Ambiente
 
-## Code scaffolding
+O projeto possui dois arquivos de ambiente:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+| Arquivo | Ambiente | API URL |
+|---------|----------|---------|
+| `src/environments/environment.ts` | Desenvolvimento | `http://localhost:5000` |
+| `src/environments/environment.prod.ts` | Produção | `https://agronexus-api.onrender.com` |
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── app/
+│   ├── core/                    # Serviços, guards, interceptors, modelos
+│   │   ├── guards/              # AuthGuard, AdminGuard
+│   │   ├── interceptors/        # Auth, Error, Loading
+│   │   ├── models/              # Interfaces TypeScript
+│   │   ├── services/            # Serviços de API
+│   │   └── store/               # Estado global (NgRx)
+│   ├── features/                # Módulos de funcionalidades
+│   │   ├── agriculture/         # Culturas e plantio
+│   │   ├── auth/                # Login e registro
+│   │   ├── dashboard/           # Dashboards
+│   │   ├── farms/               # Fazendas
+│   │   ├── financial/           # Vendas
+│   │   ├── inventory/           # Insumos e estoque
+│   │   ├── monitoring/          # Alertas e certificados
+│   │   ├── operations/          # Contratos e funcionários
+│   │   └── producers/           # Produtores
+│   ├── layouts/                 # Layout principal
+│   └── shared/                  # Componentes reutilizáveis
+├── environments/                # Configurações de ambiente
+└── assets/                      # Imagens e ícones
+```
+
+---
+
+## 🏗️ Build de Produção
 
 ```bash
-ng generate component component-name
+# Build para produção
+ng build --configuration=production
+
+# Os arquivos serão gerados em: dist/agronexus-frontend/browser/
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
+
+## 🌐 Deploy no Render
+
+### Opção 1: Static Site
+
+1. Acesse [Render Dashboard](https://dashboard.render.com)
+2. Clique em **New +** → **Static Site**
+3. Conecte seu repositório Git
+4. Configure:
+
+| Campo | Valor |
+|-------|-------|
+| **Name** | `agronexus-frontend` |
+| **Build Command** | `npm install && npm run build` |
+| **Publish Directory** | `dist/agronexus-frontend/browser` |
+| **Auto-Deploy** | `Yes` |
+
+5. Clique em **Create Static Site**
+
+### Opção 2: Deploy Manual
 
 ```bash
-ng generate --help
+# 1. Build local
+ng build --configuration=production
+
+# 2. O conteúdo da pasta dist/agronexus-frontend/browser/
+#    deve ser enviado para qualquer servidor estático
+#    (Netlify, Vercel, GitHub Pages, S3, etc.)
 ```
 
-## Building
+### Configuração de Roteamento (SPA)
 
-To build the project run:
+Para que as rotas do Angular funcionem corretamente, adicione uma regra de rewrite:
 
-```bash
-ng build
+**Render**: Adicione um arquivo `_redirects` na pasta `src/`:
+```
+/*    /index.html   200
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 🔑 Autenticação
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Fluxo de Autenticação
 
-```bash
-ng test
+```
+1. POST /api/v1/auth/register  → Criar conta (ADM ou PRD)
+2. POST /api/v1/auth/login     → Obter Access Token + Refresh Token
+3. Access Token incluído automaticamente via AuthInterceptor
 ```
 
-## Running end-to-end tests
+### Perfis de Usuário
 
-For end-to-end (e2e) testing, run:
+| Perfil | Descrição | Acesso |
+|--------|-----------|--------|
+| **ADM** | Administrador | Acesso total, dashboard admin, gestão de usuários |
+| **PRD** | Produtor Rural | Acesso aos seus próprios dados e fazendas |
 
-```bash
-ng e2e
+---
+
+## 📝 Scripts Disponíveis
+
+| Comando | Descrição |
+|---------|-----------|
+| `ng serve` | Inicia servidor de desenvolvimento |
+| `ng build` | Build de produção |
+| `ng test` | Executa testes unitários |
+| `ng lint` | Executa linting |
+| `npm start` | Inicia em desenvolvimento |
+
+---
+
+## 🎨 Tema e Cores
+
+| Cor | Hex | Uso |
+|-----|-----|-----|
+| Verde Escuro | `#2E7D32` | Primary |
+| Verde Claro | `#4CAF50` | Primary Light |
+| Marrom Terra | `#8D6E63` | Accent |
+| Vermelho | `#D32F2F` | Warn/Alertas |
+| Laranja | `#F57C00` | Warning |
+| Azul | `#1976D2` | Info |
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT.
+
+---
+
+## 👨‍💻 Desenvolvido por
+
+Equipe AgroNexus - 2025
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

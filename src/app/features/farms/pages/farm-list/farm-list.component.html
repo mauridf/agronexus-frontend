@@ -1,0 +1,118 @@
+<div class="page-container">
+  
+  <!-- Cabeçalho -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">
+        <mat-icon>home</mat-icon>
+        Fazendas
+      </h1>
+      <p class="page-subtitle">Gerencie suas propriedades rurais</p>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/farms/new">
+      <mat-icon>add</mat-icon>
+      Nova Fazenda
+    </button>
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40" color="primary"></mat-spinner>
+      <p>Carregando fazendas...</p>
+    </div>
+  }
+
+  <!-- Erro -->
+  @if (errorMessage) {
+    <div class="error-container card">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadFarms()">Tentar novamente</button>
+    </div>
+  }
+
+  <!-- Cards de Fazendas -->
+  @if (!isLoading && !errorMessage) {
+    @if (farms.length > 0) {
+      <div class="farms-grid">
+        @for (farm of farms; track farm.id) {
+          <mat-card class="farm-card">
+            <mat-card-header>
+              <mat-card-title class="farm-name">{{ farm.name }}</mat-card-title>
+              <mat-card-subtitle>
+                @if (farm.cidade && farm.estado) {
+                  {{ farm.cidade }}/{{ farm.estado }}
+                }
+                @if (!farm.cidade) {
+                  Localização não informada
+                }
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <!-- Barra de utilização da área -->
+              <div class="area-bar-container">
+                <div class="area-bar">
+                  <div class="bar-segment agricultural" [style.width.%]="(farm.agriculturalAreaHa / farm.totalAreaHa) * 100" matTooltip="Área Agricultável: {{ farm.agriculturalAreaHa | number:'1.2-2' }} ha"></div>
+                  <div class="bar-segment vegetation" [style.width.%]="(farm.vegetationAreaHa / farm.totalAreaHa) * 100" matTooltip="Vegetação: {{ farm.vegetationAreaHa | number:'1.2-2' }} ha"></div>
+                  <div class="bar-segment built" [style.width.%]="(farm.builtAreaHa / farm.totalAreaHa) * 100" matTooltip="Área Construída: {{ farm.builtAreaHa | number:'1.2-2' }} ha"></div>
+                </div>
+                <span class="area-percentage">{{ getAreaUsage(farm) }}% utilizado</span>
+              </div>
+
+              <!-- Informações rápidas -->
+              <div class="farm-info-grid">
+                <div class="info-item">
+                  <mat-icon>terrain</mat-icon>
+                  <span class="info-label">Área Total</span>
+                  <span class="info-value">{{ farm.totalAreaHa | number:'1.2-2' }} ha</span>
+                </div>
+                <div class="info-item">
+                  <mat-icon>grass</mat-icon>
+                  <span class="info-label">Agricultável</span>
+                  <span class="info-value">{{ farm.agriculturalAreaHa | number:'1.2-2' }} ha</span>
+                </div>
+                <div class="info-item">
+                  <mat-icon>park</mat-icon>
+                  <span class="info-label">Vegetação</span>
+                  <span class="info-value">{{ farm.vegetationAreaHa | number:'1.2-2' }} ha</span>
+                </div>
+                <div class="info-item">
+                  <mat-icon>foundation</mat-icon>
+                  <span class="info-label">Construída</span>
+                  <span class="info-value">{{ farm.builtAreaHa | number:'1.2-2' }} ha</span>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button mat-button color="primary" [routerLink]="['/agriculture']" [queryParams]="{farmId: farm.id}">
+                <mat-icon>grass</mat-icon>
+                Culturas
+              </button>
+              <button mat-icon-button color="primary" matTooltip="Editar" [routerLink]="['/farms', farm.id]">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" matTooltip="Desativar" (click)="deleteFarm(farm.id, farm.name)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+
+    <!-- Estado vazio -->
+    @if (farms.length === 0) {
+      <div class="empty-container card">
+        <mat-icon>home_work</mat-icon>
+        <p>Nenhuma fazenda cadastrada</p>
+        <button mat-raised-button color="primary" routerLink="/farms/new">
+          <mat-icon>add</mat-icon>
+          Cadastrar Primeira Fazenda
+        </button>
+      </div>
+    }
+  }
+</div>

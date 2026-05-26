@@ -1,0 +1,58 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/agriculture/cultures" matTooltip="Voltar">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="page-title">
+        <mat-icon>add_circle</mat-icon>
+        Nova Cultura
+      </h1>
+      <p class="page-subtitle">Cadastre um novo tipo de cultura no catálogo</p>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <form [formGroup]="cultureForm" (ngSubmit)="onSubmit()" class="form-card card">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome da Cultura</mat-label>
+      <input matInput formControlName="name" placeholder="Ex: Soja, Milho, Café" maxlength="100"/>
+      <mat-icon matPrefix>local_florist</mat-icon>
+      <mat-hint align="end">{{ nameControl?.value?.length || 0 }}/100</mat-hint>
+      @if (nameControl?.invalid && nameControl?.touched) {
+        <mat-error>Nome é obrigatório (máx. 100 caracteres)</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ciclo</mat-label>
+      <mat-select formControlName="ciclo">
+        <mat-option value="">Não informado</mat-option>
+        <mat-option value="Anual">Anual</mat-option>
+        <mat-option value="Perene">Perene</mat-option>
+        <mat-option value="Semi-perene">Semi-perene</mat-option>
+      </mat-select>
+      <mat-icon matPrefix>loop</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Variedade</mat-label>
+      <input matInput formControlName="variedade" placeholder="Ex: Transgênica, Orgânica"/>
+      <mat-icon matPrefix>category</mat-icon>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/agriculture/cultures" [disabled]="isSaving">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || cultureForm.invalid">
+        @if (!isSaving) { <mat-icon>save</mat-icon> <span>Cadastrar</span> }
+        @if (isSaving) { <mat-spinner diameter="20"></mat-spinner> <span>Salvando...</span> }
+      </button>
+    </div>
+  </form>
+</div>

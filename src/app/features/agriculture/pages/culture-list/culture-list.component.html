@@ -1,0 +1,67 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/agriculture" matTooltip="Voltar">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1 class="page-title">
+          <mat-icon>local_florist</mat-icon>
+          Catálogo de Culturas
+        </h1>
+        <p class="page-subtitle">Tipos de cultura disponíveis para plantio</p>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/agriculture/cultures/new">
+      <mat-icon>add</mat-icon>
+      Nova Cultura
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40" color="primary"></mat-spinner>
+      <p>Carregando...</p>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-container card">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadCultures()">Tentar novamente</button>
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage) {
+    @if (cultures.length > 0) {
+      <div class="cultures-grid">
+        @for (culture of cultures; track culture.id) {
+          <mat-card class="culture-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="culture-avatar">local_florist</mat-icon>
+              <mat-card-title>{{ culture.name }}</mat-card-title>
+              <mat-card-subtitle>
+                @if (culture.ciclo) { {{ culture.ciclo }} }
+                @if (!culture.ciclo) { Ciclo não informado }
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              @if (culture.variedade) {
+                <p class="variety"><strong>Variedade:</strong> {{ culture.variedade }}</p>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    } @else {
+      <div class="empty-container card">
+        <mat-icon>local_florist</mat-icon>
+        <p>Nenhuma cultura cadastrada</p>
+        <button mat-raised-button color="primary" routerLink="/agriculture/cultures/new">
+          Cadastrar Primeira Cultura
+        </button>
+      </div>
+    }
+  }
+</div>

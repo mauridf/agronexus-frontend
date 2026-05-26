@@ -1,0 +1,29 @@
+.page-container { max-width: 1200px; margin: 0 auto; }
+.page-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+}
+.header-left { display: flex; align-items: center; gap: 0.5rem; }
+.page-title {
+  font-size: 1.5rem; font-weight: 700; color: #1B5E20;
+  display: flex; align-items: center; gap: 0.5rem; margin: 0;
+}
+.page-subtitle { color: #666; font-size: 0.9rem; margin: 0.25rem 0 0 0; }
+.loading-container { display: flex; flex-direction: column; align-items: center; padding: 3rem; gap: 1rem; color: #666; }
+.error-container { text-align: center; padding: 3rem; color: #D32F2F; }
+.empty-container { text-align: center; padding: 3rem; color: #999; }
+
+.cultures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.culture-card {
+  border-radius: 12px;
+  transition: box-shadow 0.2s;
+  &:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+}
+
+.culture-avatar { color: #2E7D32; background: #E8F5E9; }
+.variety { color: #666; font-size: 0.9rem; }

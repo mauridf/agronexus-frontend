@@ -1,0 +1,117 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/agriculture/planted" matTooltip="Voltar">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="page-title">
+        <mat-icon>add_circle</mat-icon>
+        Novo Plantio
+      </h1>
+      <p class="page-subtitle">Registre uma nova cultura plantada</p>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <form [formGroup]="plantForm" (ngSubmit)="onSubmit()" class="form-card card">
+    
+    <!-- Vinculação: Fazenda + Cultura -->
+    <h2 class="section-title">
+      <mat-icon>link</mat-icon>
+      Vinculação
+    </h2>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Fazenda</mat-label>
+        <mat-select formControlName="farmId" placeholder="Selecione a fazenda">
+          @for (farm of farms; track farm.id) {
+            <mat-option [value]="farm.id">{{ farm.name }}</mat-option>
+        }
+        </mat-select>
+        <mat-icon matPrefix>home</mat-icon>
+        @if (plantForm.get('farmId')?.invalid && plantForm.get('farmId')?.touched) {
+          <mat-error>Selecione uma fazenda</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cultura</mat-label>
+        <mat-select formControlName="cultureId" placeholder="Selecione a cultura">
+          @for (culture of cultures; track culture.id) {
+            <mat-option [value]="culture.id">{{ culture.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>local_florist</mat-icon>
+        @if (plantForm.get('cultureId')?.invalid && plantForm.get('cultureId')?.touched) {
+          <mat-error>Selecione uma cultura</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Dados da Safra -->
+    <h2 class="section-title">
+      <mat-icon>agriculture</mat-icon>
+      Dados da Safra
+    </h2>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Safra</mat-label>
+        <input matInput formControlName="safra" placeholder="Ex: 2025/2026" maxlength="50"/>
+        <mat-icon matPrefix>calendar_month</mat-icon>
+        @if (plantForm.get('safra')?.invalid && plantForm.get('safra')?.touched) {
+          <mat-error>Safra é obrigatória</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Área Plantada (ha)</mat-label>
+        <input matInput type="number" formControlName="areaPlantadaHa" placeholder="0.00" min="0" step="0.01"/>
+        <span matSuffix>ha</span>
+        <mat-icon matPrefix>terrain</mat-icon>
+        @if (plantForm.get('areaPlantadaHa')?.invalid && plantForm.get('areaPlantadaHa')?.touched) {
+          <mat-error>Área mínima: 0.01 ha</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data do Plantio</mat-label>
+        <input title="Data do plantio" matInput type="date" formControlName="dataPlantio"/>
+        <mat-icon matPrefix>today</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Colheita Prevista</mat-label>
+        <input title="Data prevista para a colheita" matInput type="date" formControlName="dataColheitaPrevista"/>
+        <mat-icon matPrefix>event</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Produtividade Esperada (sc/ha)</mat-label>
+        <input matInput type="number" formControlName="produtividadeEsperadaSacasHa" placeholder="0.00" step="0.01"/>
+        <span matSuffix>sc/ha</span>
+        <mat-icon matPrefix>trending_up</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Custo Total (R$)</mat-label>
+        <input matInput type="number" formControlName="custoTotal" placeholder="0.00" step="0.01"/>
+        <span matPrefix>R$</span>
+        <mat-icon matPrefix>attach_money</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/agriculture/planted" [disabled]="isSaving">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || plantForm.invalid">
+        @if (!isSaving) { <mat-icon>save</mat-icon> <span>Registrar Plantio</span> }
+        @if (isSaving) { <mat-spinner diameter="20"></mat-spinner> <span>Salvando...</span> }
+      </button>
+    </div>
+  </form>
+</div>

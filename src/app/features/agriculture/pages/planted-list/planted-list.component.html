@@ -1,0 +1,101 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/agriculture" matTooltip="Voltar">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1 class="page-title">
+          <mat-icon>agriculture</mat-icon>
+          Culturas Plantadas
+        </h1>
+        <p class="page-subtitle">Acompanhe as safras em andamento</p>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/agriculture/plant">
+      <mat-icon>add</mat-icon>
+      Novo Plantio
+    </button>
+  </div>
+
+  <!-- Seletor de Fazenda -->
+  <mat-form-field appearance="outline" class="farm-selector">
+    <mat-label>Selecione a Fazenda</mat-label>
+    <mat-select [(value)]="selectedFarmId" (selectionChange)="onFarmChange()">
+      @for (farm of farms; track farm.id) {
+        <mat-option [value]="farm.id">{{ farm.name }}</mat-option>
+      }
+    </mat-select>
+    <mat-icon matPrefix>home</mat-icon>
+  </mat-form-field>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40" color="primary"></mat-spinner>
+      <p>Carregando...</p>
+    </div>
+  }
+
+  @if (!isLoading && plantedCultures.length > 0) {
+    <div class="planted-grid">
+      @for (planted of plantedCultures; track planted.id) {
+        <mat-card class="planted-card">
+          <mat-card-header>
+            <mat-card-title>{{ planted.cultureName }}</mat-card-title>
+            <mat-card-subtitle>Safra: {{ planted.safra }}</mat-card-subtitle>
+            <span class="status-badge" [ngClass]="getStatusColor(planted)">
+              {{ getStatusText(planted) }}
+            </span>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="planted-info-grid">
+              <div class="info-item">
+                <span class="info-label">Área Plantada</span>
+                <span class="info-value">{{ planted.areaPlantadaHa | number:'1.2-2' }} ha</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Data Plantio</span>
+                <span class="info-value">{{ planted.dataPlantio || '-' | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Colheita Prevista</span>
+                <span class="info-value">{{ planted.dataColheitaPrevista || '-' | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Prod. Esperada</span>
+                <span class="info-value">{{ planted.produtividadeEsperadaSacasHa || '-' }} sc/ha</span>
+              </div>
+            </div>
+            @if (!planted.dataColheitaReal) {
+              <button mat-stroked-button color="primary" class="harvest-btn" [routerLink]="['/agriculture/harvest', planted.id]">
+                <mat-icon>check_circle</mat-icon>
+                Registrar Colheita
+              </button>
+            }
+            @if (planted.dataColheitaReal) {
+              <div class="harvest-info">
+                <mat-icon>check_circle</mat-icon>
+                <span>Colhido em {{ planted.dataColheitaReal | date:'dd/MM/yyyy' }}</span>
+                @if (planted.lucro) {
+                  <span class="profit" [class.positive]="planted.lucro > 0">
+                    Lucro: {{ planted.lucro | number:'1.2-2' }}
+                  </span>
+                }
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+
+  @if (!isLoading && plantedCultures.length === 0) {
+    <div class="empty-container card">
+      <mat-icon>agriculture</mat-icon>
+      <p>Nenhuma cultura plantada nesta fazenda</p>
+      <button mat-raised-button color="primary" routerLink="/agriculture/plant">
+        Registrar Plantio
+      </button>
+    </div>
+  }
+</div>

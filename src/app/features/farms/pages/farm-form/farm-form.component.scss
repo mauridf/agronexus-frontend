@@ -78,3 +78,26 @@
   .form-grid { grid-template-columns: 1fr; }
   .form-actions { flex-direction: column-reverse; button { width: 100%; } }
 }
+
+// Caixa de aviso
+.warning-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #FFF3E0;
+  color: #E65100;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #F57C00;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+
+  mat-icon {
+    color: #F57C00;
+    flex-shrink: 0;
+  }
+
+  span {
+    flex: 1;
+  }
+}

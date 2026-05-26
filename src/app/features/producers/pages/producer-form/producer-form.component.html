@@ -1,6 +1,5 @@
 <div class="page-container">
   
-  <!-- Cabeçalho -->
   <div class="page-header">
     <button mat-icon-button routerLink="/producers" matTooltip="Voltar">
       <mat-icon>arrow_back</mat-icon>
@@ -14,7 +13,6 @@
     </div>
   </div>
 
-  <!-- Loading ao carregar dados -->
   @if (isLoading) {
     <div class="loading-container">
       <mat-spinner diameter="40" color="primary"></mat-spinner>
@@ -22,7 +20,6 @@
     </div>
   }
 
-  <!-- Mensagem de erro -->
   @if (errorMessage) {
     <div class="error-alert">
       <mat-icon>error_outline</mat-icon>
@@ -30,10 +27,58 @@
     </div>
   }
 
-  <!-- Formulário -->
   @if (!isLoading) {
     <form [formGroup]="producerForm" (ngSubmit)="onSubmit()" class="producer-form">
       
+      <!-- Associação com Usuário (Admin ou automático para PRD) -->
+      <div class="card">
+        <h2 class="section-title">
+          <mat-icon>link</mat-icon>
+          Vinculação
+        </h2>
+
+        <!-- Se for Admin: dropdown para selecionar usuário -->
+        @if (isAdmin && !isEditing) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Usuário (PRD) Associado</mat-label>
+            <mat-select formControlName="userId" placeholder="Selecione um usuário produtor">
+              @for (user of availableUsers; track user.id) {
+                <mat-option [value]="user.id">
+                  {{ user.email }} 
+                  <span class="option-hint">({{ user.role }})</span>
+                </mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>person</mat-icon>
+            @if (userIdControl?.invalid && userIdControl?.touched) {
+              <mat-error>Selecione um usuário para associar ao produtor</mat-error>
+            }
+            <mat-hint>Selecione o usuário que será vinculado a este produtor</mat-hint>
+          </mat-form-field>
+        }
+
+        <!-- Se for Admin editando: mostra userId como readonly -->
+        @if (isAdmin && isEditing) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Usuário (PRD) Associado</mat-label>
+            <input title="Usuário (PRD) Associado" matInput formControlName="userId" readonly/>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-hint>O vínculo com usuário não pode ser alterado na edição</mat-hint>
+          </mat-form-field>
+        }
+
+        <!-- Se for PRD: mostra informação automática -->
+        @if (!isAdmin) {
+          <div class="info-box">
+            <mat-icon>info</mat-icon>
+            <span>Este produtor será vinculado automaticamente ao seu usuário ({{ userIdControl?.value }})</span>
+          </div>
+          <!-- Campo hidden para enviar o userId -->
+          <input type="hidden" formControlName="userId"/>
+        }
+      </div>
+
+      <!-- Dados Pessoais -->
       <div class="card">
         <h2 class="section-title">
           <mat-icon>person</mat-icon>
@@ -41,51 +86,40 @@
         </h2>
 
         <div class="form-grid">
-          <!-- Nome -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Nome Completo</mat-label>
             <input matInput formControlName="name" placeholder="Nome do produtor" maxlength="200"/>
-            <mat-icon matPrefix>person</mat-icon>
+            <mat-icon matPrefix>badge</mat-icon>
             <mat-hint align="end">{{ nameControl?.value?.length || 0 }}/200</mat-hint>
             @if (nameControl?.invalid && nameControl?.touched) {
               <mat-error>{{ getErrorMessage('name') }}</mat-error>
             }
           </mat-form-field>
 
-          <!-- CPF/CNPJ -->
           <mat-form-field appearance="outline">
             <mat-label>CPF/CNPJ</mat-label>
-            <input 
-              matInput 
-              formControlName="cpfCnpj" 
-              [mask]="cpfCnpjMask"
-              placeholder="000.000.000-00"
-              [dropSpecialCharacters]="false"
-            />
-            <mat-icon matPrefix>badge</mat-icon>
+            <input title="CPF/CNPJ" matInput formControlName="cpfCnpj" [mask]="cpfCnpjMask" placeholder="000.000.000-00" [dropSpecialCharacters]="false"/>
+            <mat-icon matPrefix>assignment</mat-icon>
             @if (cpfCnpjControl?.invalid && cpfCnpjControl?.touched) {
               <mat-error>{{ getErrorMessage('cpfCnpj') }}</mat-error>
             }
           </mat-form-field>
 
-          <!-- RG -->
           <mat-form-field appearance="outline">
             <mat-label>RG</mat-label>
-            <input matInput formControlName="rg" placeholder="RG do produtor"/>
-            <mat-icon matPrefix>assignment</mat-icon>
+            <input title="RG" matInput formControlName="rg" placeholder="RG"/>
+            <mat-icon matPrefix>credit_card</mat-icon>
           </mat-form-field>
 
-          <!-- Data de Nascimento -->
           <mat-form-field appearance="outline">
             <mat-label>Data de Nascimento</mat-label>
             <input title="Data de Nascimento" matInput formControlName="dataNascimento" type="date"/>
             <mat-icon matPrefix>calendar_today</mat-icon>
           </mat-form-field>
 
-          <!-- Telefone -->
           <mat-form-field appearance="outline">
             <mat-label>Telefone</mat-label>
-            <input matInput formControlName="telefone" mask="(00) 00000-0000" placeholder="(00) 00000-0000"/>
+            <input title="Telefone" matInput formControlName="telefone" mask="(00) 00000-0000" placeholder="(00) 00000-0000"/>
             <mat-icon matPrefix>phone</mat-icon>
           </mat-form-field>
         </div>
@@ -97,26 +131,20 @@
           <mat-icon>location_on</mat-icon>
           Endereço
         </h2>
-
         <div class="form-grid">
-          <!-- Endereço -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Endereço</mat-label>
-            <input matInput formControlName="endereco" placeholder="Rua, número, bairro"/>
+            <input title="Endereço" matInput formControlName="endereco" placeholder="Rua, número, bairro"/>
             <mat-icon matPrefix>home</mat-icon>
           </mat-form-field>
-
-          <!-- Cidade -->
           <mat-form-field appearance="outline">
             <mat-label>Cidade</mat-label>
-            <input matInput formControlName="cidade" placeholder="Cidade"/>
+            <input title="Cidade" matInput formControlName="cidade" placeholder="Cidade"/>
             <mat-icon matPrefix>location_city</mat-icon>
           </mat-form-field>
-
-          <!-- Estado -->
           <mat-form-field appearance="outline">
             <mat-label>Estado (UF)</mat-label>
-            <input matInput formControlName="estado" placeholder="SP" maxlength="2" style="text-transform: uppercase;"/>
+            <input title="Estado (UF)" matInput formControlName="estado" placeholder="SP" maxlength="2" style="text-transform: uppercase;"/>
             <mat-icon matPrefix>map</mat-icon>
             @if (estadoControl?.invalid && estadoControl?.touched) {
               <mat-error>{{ getErrorMessage('estado') }}</mat-error>
@@ -131,43 +159,29 @@
           <mat-icon>description</mat-icon>
           Dados Complementares
         </h2>
-
         <div class="form-grid">
-          <!-- Inscrição Estadual -->
           <mat-form-field appearance="outline">
             <mat-label>Inscrição Estadual</mat-label>
-            <input matInput formControlName="inscricaoEstadual" placeholder="Inscrição Estadual"/>
+            <input title="Inscrição Estadual" matInput formControlName="inscricaoEstadual"/>
             <mat-icon matPrefix>article</mat-icon>
           </mat-form-field>
-
-          <!-- CAR -->
           <mat-form-field appearance="outline">
             <mat-label>CAR</mat-label>
-            <input matInput formControlName="car" placeholder="Cadastro Ambiental Rural"/>
+            <input title="Cadastro Ambiental Rural" matInput formControlName="car" placeholder="Cadastro Ambiental Rural"/>
             <mat-icon matPrefix>eco</mat-icon>
           </mat-form-field>
-
-          <!-- Dados Bancários -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Dados Bancários</mat-label>
-            <textarea matInput formControlName="dadosBancarios" placeholder="Banco, agência, conta..." rows="2"></textarea>
+            <textarea title="Dados Bancários" matInput formControlName="dadosBancarios" placeholder="Banco, agência, conta..." rows="2"></textarea>
             <mat-icon matPrefix>account_balance</mat-icon>
           </mat-form-field>
         </div>
       </div>
 
-      <!-- Botões de Ação -->
+      <!-- Ações -->
       <div class="form-actions">
-        <button mat-button type="button" routerLink="/producers" [disabled]="isSaving">
-          Cancelar
-        </button>
-        <button 
-          mat-raised-button 
-          color="primary" 
-          type="submit" 
-          [disabled]="isSaving || producerForm.invalid"
-          class="submit-button"
-        >
+        <button mat-button type="button" routerLink="/producers" [disabled]="isSaving">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || producerForm.invalid" class="submit-button">
           @if (!isSaving) {
             <mat-icon>save</mat-icon>
             <span>{{ isEditing ? 'Atualizar' : 'Cadastrar' }}</span>

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../../shared/material/material.module';
 import { FarmService } from '../../../../core/services/farm.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ProducerService } from '../../../../core/services/producer.service';
 import { Farm } from '../../../../core/models/farm.model';
 
 @Component({
@@ -23,6 +24,7 @@ export class FarmListComponent implements OnInit {
 
   constructor(
     private farmService: FarmService,
+    private producerService: ProducerService,
     private authService: AuthService
   ) {}
 
@@ -33,6 +35,7 @@ export class FarmListComponent implements OnInit {
   /**
    * Carrega as fazendas do produtor logado
    */
+
   loadFarms(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -44,19 +47,89 @@ export class FarmListComponent implements OnInit {
       return;
     }
 
-    // TODO: Idealmente usar o producerId real
-    // Por enquanto usa o userId (o backend deve mapear)
-    this.farmService.getFarmsByProducer(user.id).subscribe({
-      next: (farms) => {
-        this.farms = farms;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Erro ao carregar fazendas.';
-        this.isLoading = false;
-        console.error('Erro:', error);
-      }
-    });
+    if (this.authService.isAdmin()) {
+      // Admin: carrega fazendas de todos os produtores
+      // Como não temos endpoint "getAllFarms", carregamos via produtores
+      this.producerService.getProducers(1, 1000).subscribe({
+        next: (producers) => {
+          if (producers.length === 0) {
+            this.farms = [];
+            this.isLoading = false;
+            return;
+          }
+          
+          // Carrega fazendas de cada produtor
+          let completedRequests = 0;
+          const allFarms: Farm[] = [];
+          
+          producers.forEach(producer => {
+            this.farmService.getFarmsByProducer(producer.id).subscribe({
+              next: (farms) => {
+                allFarms.push(...farms);
+                completedRequests++;
+                
+                if (completedRequests === producers.length) {
+                  this.farms = allFarms;
+                  this.isLoading = false;
+                }
+              },
+              error: () => {
+                completedRequests++;
+                if (completedRequests === producers.length) {
+                  this.farms = allFarms;
+                  this.isLoading = false;
+                }
+              }
+            });
+          });
+        },
+        error: (error) => {
+          this.errorMessage = 'Erro ao carregar fazendas.';
+          this.isLoading = false;
+        }
+      });
+    } else {
+      // PRD: carrega fazendas dos produtores vinculados ao usuário
+      this.producerService.getProducers(1, 1000).subscribe({
+        next: (producers) => {
+          const userProducers = producers.filter(p => p.userId === user.id);
+          
+          if (userProducers.length === 0) {
+            this.farms = [];
+            this.isLoading = false;
+            return;
+          }
+
+          let completedRequests = 0;
+          const allFarms: Farm[] = [];
+          
+          userProducers.forEach(producer => {
+            this.farmService.getFarmsByProducer(producer.id).subscribe({
+              next: (farms) => {
+                allFarms.push(...farms);
+                completedRequests++;
+                
+                if (completedRequests === userProducers.length) {
+                  this.farms = allFarms;
+                  this.isLoading = false;
+                }
+              },
+              error: () => {
+                completedRequests++;
+                if (completedRequests === userProducers.length) {
+                  this.farms = allFarms;
+                  this.isLoading = false;
+                }
+              }
+            });
+          });
+        },
+        error: (error) => {
+          this.errorMessage = 'Erro ao carregar fazendas.';
+          this.isLoading = false;
+        }
+      });
+    }
   }
 
   /**

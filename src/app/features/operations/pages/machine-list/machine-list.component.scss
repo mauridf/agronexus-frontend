@@ -1,0 +1,7 @@
+.page-container { max-width: 1200px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+.page-title { font-size: 1.5rem; font-weight: 700; color: #1B5E20; display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+.farm-select { width: 100%; max-width: 400px; margin-bottom: 1.5rem; }
+.loading { display: flex; justify-content: center; padding: 3rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.card { border-radius: 12px; }

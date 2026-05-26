@@ -1,0 +1,25 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/operations/contracts"><mat-icon>arrow_back</mat-icon></button>
+    <div><h1 class="page-title"><mat-icon>add_circle</mat-icon> Novo Contrato</h1></div>
+  </div>
+  @if (errorMessage) { <div class="error-alert"><mat-icon>error_outline</mat-icon><span>{{ errorMessage }}</span></div> }
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="card form-card">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fazenda</mat-label><mat-select formControlName="farmId">@for (f of farms; track f.id) { <mat-option [value]="f.id">{{ f.name }}</mat-option> }</mat-select>
+    </mat-form-field>
+    <div class="form-grid">
+      <mat-form-field appearance="outline"><mat-label>Tipo</mat-label><mat-select formControlName="tipo">@for (t of tipos; track t) { <mat-option [value]="t">{{ t }}</mat-option> }</mat-select></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Parte Contratante</mat-label><input title="Parte Contratante" matInput formControlName="parteContratante"/></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Valor (R$)</mat-label><input title="Valor" matInput type="number" formControlName="valor" min="0" step="0.01"/><span matPrefix>R$</span></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Data Início</mat-label><input title="Data Início" matInput type="date" formControlName="dataInicio"/></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Data Fim</mat-label><input title="Data Fim" matInput type="date" formControlName="dataFim"/></mat-form-field>
+    </div>
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/operations/contracts">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || form.invalid">
+        @if (!isSaving) { <mat-icon>save</mat-icon> <span>Cadastrar</span> } @else { <mat-spinner diameter="20"></mat-spinner> }
+      </button>
+    </div>
+  </form>
+</div>

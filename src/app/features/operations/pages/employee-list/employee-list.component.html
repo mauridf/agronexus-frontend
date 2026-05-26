@@ -1,0 +1,25 @@
+<div class="page-container">
+  <div class="page-header"><div><button mat-icon-button routerLink="/operations"><mat-icon>arrow_back</mat-icon></button><h1 class="page-title"><mat-icon>badge</mat-icon> Funcionários</h1></div><button mat-raised-button color="primary" routerLink="/operations/employees/new"><mat-icon>add</mat-icon> Novo</button></div>
+  <mat-form-field appearance="outline" class="farm-select"><mat-label>Fazenda</mat-label><mat-select [(value)]="selectedFarmId" (selectionChange)="onFarmChange()">@for (f of farms; track f.id) { <mat-option [value]="f.id">{{ f.name }}</mat-option> }</mat-select></mat-form-field>
+  @if (isLoading) { <div class="loading"><mat-spinner diameter="40"></mat-spinner></div> }
+  @if (!isLoading && employees.length) {
+    <div class="grid">
+      @for (e of employees; track e.id) {
+        <mat-card class="card" [class.dismissed]="!e.empregado">
+          <mat-card-header><mat-card-title>{{ e.name }}</mat-card-title><mat-card-subtitle>{{ e.funcao || 'Função não informada' }}</mat-card-subtitle>
+            <span class="badge" [class.badge-active]="e.empregado" [class.badge-inactive]="!e.empregado">{{ e.empregado ? 'ATIVO' : 'DEMITIDO' }}</span>
+          </mat-card-header>
+          <mat-card-content>
+            @if (e.cpf) { <p><strong>CPF:</strong> {{ e.cpf }}</p> }
+            @if (e.salario) { <p><strong>Salário:</strong> R$ {{ e.salario | number:'1.2-2' }}</p> }
+            @if (e.dataAdmissao) { <p><strong>Admissão:</strong> {{ e.dataAdmissao | date:'dd/MM/yyyy' }}</p> }
+            @if (e.dataDemissao) { <p><strong>Demissão:</strong> {{ e.dataDemissao | date:'dd/MM/yyyy' }}</p> }
+          </mat-card-content>
+          @if (e.empregado) {
+            <mat-card-actions><button mat-stroked-button color="warn" (click)="dismissEmployee(e)"><mat-icon>cancel</mat-icon> Demitir</button></mat-card-actions>
+          }
+        </mat-card>
+      }
+    </div>
+  }
+</div>

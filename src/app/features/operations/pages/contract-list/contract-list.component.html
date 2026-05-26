@@ -1,0 +1,32 @@
+<div class="page-container">
+  <div class="page-header">
+    <div><button mat-icon-button routerLink="/operations"><mat-icon>arrow_back</mat-icon></button>
+      <h1 class="page-title"><mat-icon>description</mat-icon> Contratos</h1></div>
+    <button mat-raised-button color="primary" routerLink="/operations/contracts/new"><mat-icon>add</mat-icon> Novo</button>
+  </div>
+  <mat-form-field appearance="outline" class="farm-select">
+    <mat-label>Fazenda</mat-label>
+    <mat-select [(value)]="selectedFarmId" (selectionChange)="onFarmChange()">
+      @for (f of farms; track f.id) { <mat-option [value]="f.id">{{ f.name }}</mat-option> }
+    </mat-select>
+  </mat-form-field>
+  @if (isLoading) { <div class="loading"><mat-spinner diameter="40"></mat-spinner></div> }
+  @if (!isLoading && contracts.length) {
+    <div class="grid">
+      @for (c of contracts; track c.id) {
+        <mat-card class="card" [class.active]="c.ativo" [class.inactive]="!c.ativo">
+          <mat-card-header>
+            <mat-card-title>{{ c.tipo }}</mat-card-title>
+            <mat-card-subtitle>{{ c.parteContratante || 'Sem parte' }}</mat-card-subtitle>
+            <span class="badge" [class.badge-active]="c.ativo" [class.badge-inactive]="!c.ativo">{{ c.ativo ? 'ATIVO' : 'INATIVO' }}</span>
+          </mat-card-header>
+          <mat-card-content>
+            <p><strong>Valor:</strong> R$ {{ c.valor | number:'1.2-2' }}</p>
+            <p><strong>Início:</strong> {{ c.dataInicio | date:'dd/MM/yyyy' }}</p>
+            @if (c.dataFim) { <p><strong>Fim:</strong> {{ c.dataFim | date:'dd/MM/yyyy' }}</p> }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

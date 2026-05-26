@@ -1,0 +1,8 @@
+.page-container { max-width: 1200px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+.page-title { font-size: 1.5rem; font-weight: 700; color: #1B5E20; display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+.farm-select { width: 100%; max-width: 400px; margin-bottom: 1rem; }
+.total-card { font-size: 1.2rem; padding: 1rem; background: #E8F5E9; color: #2E7D32; margin-bottom: 1rem; }
+.table-container { overflow-x: auto; }
+.full-width-table { width: 100%; }
+.empty { text-align: center; padding: 2rem; color: #999; }

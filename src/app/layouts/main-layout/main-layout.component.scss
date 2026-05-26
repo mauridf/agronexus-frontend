@@ -1,0 +1,195 @@
+// ============================================
+// LAYOUT PRINCIPAL - AGROnexus
+// ============================================
+
+.layout-container {
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+// ============================================
+// SIDEBAR
+// ============================================
+
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #1B5E20 0%, #2E7D32 100%);
+  color: white;
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: #A5D6A7;
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.logo-version {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+// ============================================
+// NAVEGAÇÃO
+// ============================================
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.5rem 0;
+  overflow-y: auto;
+
+  .mat-mdc-list-item {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 2px 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    &.active-link {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 500;
+
+      .mat-icon {
+        color: #A5D6A7;
+      }
+    }
+
+    .mat-icon {
+      color: rgba(255, 255, 255, 0.7);
+      margin-right: 0.5rem;
+    }
+  }
+
+  mat-divider {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 0.5rem 1rem;
+  }
+}
+
+// ============================================
+// FOOTER DO SIDEBAR
+// ============================================
+
+.sidebar-footer {
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-text {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.header {
+  height: 64px;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.menu-button {
+  margin-right: 0.5rem;
+}
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.header-icon {
+  margin: 0 0.25rem;
+}
+
+.user-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+
+  .user-name {
+    font-size: 0.875rem;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// ============================================
+// ÁREA DE CONTEÚDO
+// ============================================
+
+.content-area {
+  padding: 1.5rem;
+  min-height: calc(100vh - 64px);
+  background-color: #f5f5f5;
+}
+
+// ============================================
+// RESPONSIVIDADE
+// ============================================
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+  }
+
+  .content-area {
+    padding: 1rem;
+  }
+
+  .user-name {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    display: none;
+  }
+
+  .content-area {
+    padding: 0.75rem;
+  }
+}

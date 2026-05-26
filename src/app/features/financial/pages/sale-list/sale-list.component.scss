@@ -1,0 +1,32 @@
+.page-container { max-width: 1200px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+.page-title { font-size: 1.5rem; font-weight: 700; color: #1B5E20; display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+.farm-select { width: 100%; max-width: 400px; margin-bottom: 1.5rem; }
+.loading { display: flex; justify-content: center; padding: 3rem; }
+
+// Card de total
+.total-card {
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+  color: white;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.total-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  mat-icon { font-size: 2.5rem; width: 2.5rem; height: 2.5rem; color: #A5D6A7; }
+}
+.total-label { display: block; font-size: 0.85rem; opacity: 0.8; }
+.total-value { display: block; font-size: 2rem; font-weight: 700; margin-top: 0.25rem; }
+
+// Tabela
+.table-container { overflow-x: auto; }
+.full-width-table { width: 100%; }
+
+// Vazio
+.empty { text-align: center; padding: 3rem; color: #999;
+  mat-icon { font-size: 4rem; width: 4rem; height: 4rem; margin-bottom: 1rem; }
+  p { margin-bottom: 1rem; }
+}

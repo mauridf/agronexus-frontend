@@ -1,0 +1,92 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/financial/sales"><mat-icon>arrow_back</mat-icon></button>
+    <div>
+      <h1 class="page-title"><mat-icon>add_shopping_cart</mat-icon> Nova Venda</h1>
+      <p class="page-subtitle">Registre a venda de uma produção colhida</p>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-alert"><mat-icon>error_outline</mat-icon><span>{{ errorMessage }}</span></div>
+  }
+
+  <form [formGroup]="saleForm" (ngSubmit)="onSubmit()" class="card form-card">
+    
+    <!-- Selecionar Fazenda e Cultura Plantada -->
+    <h2 class="section-title"><mat-icon>link</mat-icon> Vinculação</h2>
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fazenda</mat-label>
+      <mat-select [value]="selectedFarmId" (selectionChange)="onFarmChange($event.value)">
+        @for (f of farms; track f.id) { <mat-option [value]="f.id">{{ f.name }}</mat-option> }
+      </mat-select>
+      <mat-icon matPrefix>home</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Cultura Plantada (Colhida)</mat-label>
+      <mat-select formControlName="plantedCultureId" placeholder="Selecione uma cultura já colhida">
+        @for (pc of plantedCultures; track pc.id) {
+          <mat-option [value]="pc.id">
+            {{ pc.cultureName }} - Safra {{ pc.safra }}
+          </mat-option>
+        }
+      </mat-select>
+      <mat-icon matPrefix>agriculture</mat-icon>
+      @if (plantedCultures.length === 0 && selectedFarmId) {
+        <mat-hint>Nenhuma cultura colhida nesta fazenda</mat-hint>
+      }
+      @if (saleForm.get('plantedCultureId')?.invalid && saleForm.get('plantedCultureId')?.touched) {
+        <mat-error>Selecione uma cultura colhida</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Dados da Venda -->
+    <h2 class="section-title"><mat-icon>description</mat-icon> Dados da Venda</h2>
+    
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Quantidade Vendida</mat-label>
+        <input title="Quantidade Vendida" matInput type="number" formControlName="quantidadeVendida" min="0" step="0.01"/>
+        <mat-icon matPrefix>scale</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Preço Unitário (R$)</mat-label>
+        <input title="Preço Unitário" matInput type="number" formControlName="precoUnitario" min="0" step="0.01"/>
+        <span matPrefix>R$</span>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data da Venda</mat-label>
+        <input title="Data da Venda" matInput type="date" formControlName="dataVenda"/>
+        <mat-icon matPrefix>today</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Destino</mat-label>
+        <input title="Destino" matInput formControlName="destino" placeholder="Ex: Cooperativa, Exportação"/>
+        <mat-icon matPrefix>local_shipping</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Valor Total Calculado -->
+    @if (calculatedTotal > 0) {
+      <div class="total-preview">
+        <mat-icon>calculate</mat-icon>
+        <span>Valor Total:</span>
+        <strong>R$ {{ calculatedTotal | number:'1.2-2' }}</strong>
+      </div>
+    }
+
+    <!-- Ações -->
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/financial/sales" [disabled]="isSaving">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSaving || saleForm.invalid">
+        @if (!isSaving) { <mat-icon>save</mat-icon> <span>Registrar Venda</span> }
+        @if (isSaving) { <mat-spinner diameter="20"></mat-spinner> <span>Salvando...</span> }
+      </button>
+    </div>
+  </form>
+</div>

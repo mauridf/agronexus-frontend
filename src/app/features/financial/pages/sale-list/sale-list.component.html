@@ -1,0 +1,65 @@
+<div class="page-container">
+  <div class="page-header">
+    <div><button mat-icon-button routerLink="/financial"><mat-icon>arrow_back</mat-icon></button>
+      <h1 class="page-title"><mat-icon>point_of_sale</mat-icon> Vendas</h1></div>
+    <button mat-raised-button color="primary" routerLink="/financial/sales/new"><mat-icon>add</mat-icon> Nova Venda</button>
+  </div>
+
+  <mat-form-field appearance="outline" class="farm-select">
+    <mat-label>Fazenda</mat-label>
+    <mat-select [(value)]="selectedFarmId" (selectionChange)="onFarmChange()">
+      @for (f of farms; track f.id) { <mat-option [value]="f.id">{{ f.name }}</mat-option> }
+    </mat-select>
+  </mat-form-field>
+
+  @if (isLoading) { <div class="loading"><mat-spinner diameter="40"></mat-spinner></div> }
+
+  @if (!isLoading && sales.length) {
+    <!-- Card de total -->
+    <div class="total-card card">
+      <div class="total-content">
+        <mat-icon>account_balance_wallet</mat-icon>
+        <div>
+          <span class="total-label">Total em Vendas</span>
+          <span class="total-value">R$ {{ getTotalSales() | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de vendas -->
+    <div class="table-container card">
+      <table mat-table [dataSource]="sales" class="full-width-table">
+        <ng-container matColumnDef="data">
+          <th mat-header-cell *matHeaderCellDef>Data</th>
+          <td mat-cell *matCellDef="let s">{{ s.dataVenda | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantidade">
+          <th mat-header-cell *matHeaderCellDef>Quantidade</th>
+          <td mat-cell *matCellDef="let s">{{ s.quantidadeVendida | number:'1.2-2' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="preco">
+          <th mat-header-cell *matHeaderCellDef>Preço Unit.</th>
+          <td mat-cell *matCellDef="let s">R$ {{ s.precoUnitario | number:'1.2-2' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Valor Total</th>
+          <td mat-cell *matCellDef="let s"><strong>R$ {{ s.valorTotal | number:'1.2-2' }}</strong></td>
+        </ng-container>
+        <ng-container matColumnDef="destino">
+          <th mat-header-cell *matHeaderCellDef>Destino</th>
+          <td mat-cell *matCellDef="let s">{{ s.destino || '-' }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['data', 'quantidade', 'preco', 'total', 'destino']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['data', 'quantidade', 'preco', 'total', 'destino']"></tr>
+      </table>
+    </div>
+  }
+
+  @if (!isLoading && !sales.length && selectedFarmId) {
+    <div class="empty card">
+      <mat-icon>shopping_cart</mat-icon>
+      <p>Nenhuma venda registrada</p>
+      <button mat-raised-button color="primary" routerLink="/financial/sales/new">Registrar Venda</button>
+    </div>
+  }
+</div>

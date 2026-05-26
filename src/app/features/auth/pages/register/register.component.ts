@@ -135,4 +135,24 @@ export class RegisterComponent {
     if (this.confirmPasswordControl?.hasError('passwordMismatch')) return 'As senhas não conferem';
     return '';
   }
+
+  hasUpperCase(): boolean {
+    const value = this.passwordControl?.value;
+    return value ? /[A-Z]/.test(value) : false;
+    }
+
+    hasLowerCase(): boolean {
+    const value = this.passwordControl?.value;
+    return value ? /[a-z]/.test(value) : false;
+    }
+
+    hasNumber(): boolean {
+    const value = this.passwordControl?.value;
+    return value ? /[0-9]/.test(value) : false;
+    }
+
+    hasSpecialChar(): boolean {
+    const value = this.passwordControl?.value;
+    return value ? /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value) : false;
+    }
 }

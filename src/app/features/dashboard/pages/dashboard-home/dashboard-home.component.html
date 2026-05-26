@@ -1,0 +1,191 @@
+<div class="dashboard-container">
+  
+  <!-- Cabeçalho -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">
+      <mat-icon>dashboard</mat-icon>
+      Dashboard {{ isAdmin ? 'Administrativo' : 'do Produtor' }}
+    </h1>
+    <p class="dashboard-subtitle">Visão geral dos indicadores</p>
+  </div>
+
+  <!-- Estado de Loading -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40" color="primary"></mat-spinner>
+      <p>Carregando dashboard...</p>
+    </div>
+  }
+
+  <!-- Estado de Erro -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadDashboard()">
+        Tentar novamente
+      </button>
+    </div>
+  }
+
+  <!-- Dashboard Admin -->
+  @if (!isLoading && isAdmin && adminData) {
+    <div class="stats-grid">
+      <app-stat-card 
+        label="Total de Usuários" 
+        [value]="adminData.totalUsers"
+        icon="people"
+        colorClass="color-blue"
+        suffix=""
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Total de Produtores" 
+        [value]="adminData.totalProducers"
+        icon="agriculture"
+        colorClass="color-green"
+        suffix=""
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Total de Fazendas" 
+        [value]="adminData.totalFarms"
+        icon="home"
+        colorClass="color-green"
+        suffix=""
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Área Total Gerenciada" 
+        [value]="adminData.totalAreaManagedHa"
+        icon="map"
+        colorClass="color-orange"
+        suffix=" ha"
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Funcionários Ativos" 
+        [value]="adminData.totalActiveEmployees"
+        icon="badge"
+        colorClass="color-blue"
+        suffix=""
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Alertas Não Resolvidos" 
+        [value]="adminData.totalUnresolvedAlerts"
+        icon="warning"
+        colorClass="color-red"
+        suffix=""
+        [subtitle]="adminData.totalUnresolvedAlerts > 0 ? 'Atenção necessária' : 'Tudo sob controle'"
+      ></app-stat-card>
+    </div>
+
+    <!-- Top Produtores -->
+    @if (adminData.topProducers.length > 0) {
+      <div class="section">
+        <h2 class="section-title">
+          <mat-icon>star</mat-icon>
+          Top Produtores
+        </h2>
+        <div class="table-container card">
+          <table mat-table [dataSource]="adminData.topProducers" class="full-width-table">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Produtor</th>
+              <td mat-cell *matCellDef="let producer">{{ producer.producerName }}</td>
+            </ng-container>
+            <ng-container matColumnDef="farms">
+              <th mat-header-cell *matHeaderCellDef>Fazendas</th>
+              <td mat-cell *matCellDef="let producer">{{ producer.farmCount }}</td>
+            </ng-container>
+            <ng-container matColumnDef="area">
+              <th mat-header-cell *matHeaderCellDef>Área Total</th>
+              <td mat-cell *matCellDef="let producer">{{ producer.totalAreaHa | number:'1.2-2' }} ha</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['name', 'farms', 'area']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['name', 'farms', 'area']"></tr>
+          </table>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- Dashboard Produtor -->
+  @if (!isLoading && !isAdmin && producerData) {
+    <div class="stats-grid">
+      <app-stat-card 
+        label="Total de Fazendas" 
+        [value]="producerData.totalFarms"
+        icon="home"
+        colorClass="color-green"
+        suffix=""
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Área Total" 
+        [value]="producerData.totalAreaHa"
+        icon="map"
+        colorClass="color-orange"
+        suffix=" ha"
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Área Plantada" 
+        [value]="producerData.totalPlantedAreaHa"
+        icon="grass"
+        colorClass="color-green"
+        suffix=" ha"
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Utilização da Área" 
+        [value]="producerData.areaUtilizationPercentage"
+        icon="pie_chart"
+        colorClass="color-blue"
+        suffix="%"
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Funcionários Ativos" 
+        [value]="producerData.totalActiveEmployees"
+        icon="badge"
+        colorClass="color-blue"
+        suffix=""
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Máquinas" 
+        [value]="producerData.totalMachines"
+        icon="precision_manufacturing"
+        colorClass="color-orange"
+        suffix=""
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Alertas" 
+        [value]="producerData.unresolvedAlerts"
+        icon="warning"
+        colorClass="color-red"
+        suffix=""
+        [subtitle]="producerData.unresolvedAlerts > 0 ? 'Atenção necessária' : 'Tudo sob controle'"
+      ></app-stat-card>
+
+      <app-stat-card 
+        label="Certificados a Vencer" 
+        [value]="producerData.expiringCertificates"
+        icon="verified"
+        colorClass="color-orange"
+        suffix=""
+        [subtitle]="producerData.expiringCertificates > 0 ? 'Próximos 30 dias' : 'Em dia'"
+      ></app-stat-card>
+    </div>
+  }
+
+  <!-- Estado Vazio (fallback) -->
+  @if (!isLoading && !errorMessage && !adminData && !producerData) {
+    <div class="empty-container card">
+      <mat-icon>inbox</mat-icon>
+      <p>Nenhum dado disponível no momento.</p>
+    </div>
+  }
+</div>

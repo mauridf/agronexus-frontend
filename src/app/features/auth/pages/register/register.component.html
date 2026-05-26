@@ -72,11 +72,11 @@
       <div class="password-requirements">
         <p class="requirements-title">A senha deve conter:</p>
         <ul>
-          <li [class.met]="passwordControl?.value?.length >= 8">Mínimo 8 caracteres</li>
-          <li [class.met]="passwordControl?.value && /[A-Z]/.test(passwordControl.value)">1 letra maiúscula</li>
-          <li [class.met]="passwordControl?.value && /[a-z]/.test(passwordControl.value)">1 letra minúscula</li>
-          <li [class.met]="passwordControl?.value && /[0-9]/.test(passwordControl.value)">1 número</li>
-          <li [class.met]="passwordControl?.value && /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(passwordControl.value)">1 caractere especial</li>
+          <li [class.met]="(passwordControl?.value?.length ?? 0) >= 8">Mínimo 8 caracteres</li>
+          <li [class.met]="hasUpperCase()">1 letra maiúscula</li>
+          <li [class.met]="hasLowerCase()">1 letra minúscula</li>
+          <li [class.met]="hasNumber()">1 número</li>
+          <li [class.met]="hasSpecialChar()">1 caractere especial</li>
         </ul>
       </div>
 
